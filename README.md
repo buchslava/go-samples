@@ -737,6 +737,44 @@ func main() {
 }
 ```
 
+# limited parallel
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+
+var (
+    jobs    = 20                 // Run 20 jobs in total.
+    running = make(chan bool, 3) // Limit concurrent jobs to 3.
+    wg      sync.WaitGroup       // Keep track of which jobs are finished.
+)
+
+func main() {
+  wg.Add(jobs)
+  for i := 1; i <= jobs; i++ {
+    running <- true // Fill running; this will block and wait if it's already full.
+
+    go func(i int) {
+        defer func() {
+            <-running // Drain running so new jobs can be added.
+            wg.Done() // Signal that this job is done.
+        }()
+
+        time.Sleep(1 * time.Second)
+        fmt.Println(i)
+    }(i)
+  }
+
+  wg.Wait()
+  fmt.Println("done")
+}
+```
+
 # slice
 ```go
 package main
