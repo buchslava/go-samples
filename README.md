@@ -34,9 +34,74 @@ func main() {
     fmt.Println(<-messages)
     messages <- "foo"
     fmt.Println(<-messages)
-
 }
 ```
+```
+buffered
+channel
+foo
+```
+# deadlock for buffered channel
+```go
+package main
+
+import "fmt"
+
+func main() {
+    messages := make(chan string, 2)
+
+    messages <- "buffered"
+    messages <- "channel"
+    messages <- "foo" // !!!
+ 
+    fmt.Println(<-messages)
+    fmt.Println(<-messages)
+}
+```
+```
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan send]:
+main.main()
+	/tmp/sandbox157669183/prog.go:10 +0x8d
+```
+
+# unbuffered channel issue
+```go
+package main
+
+func main() {
+    messages := make(chan string)
+    messages <- "buffered"
+}
+```
+```
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan send]:
+main.main()
+	/tmp/sandbox653494253/prog.go:5 +0x50
+```
+
+# unbuffered channel without error
+```go
+package main
+
+import (
+  "fmt"
+)
+
+func main() {
+  ch01 := make(chan string)
+
+  go func() {
+    fmt.Println(<-ch01)
+  }()
+
+  ch01 <- "Hello"
+}
+```
+
 # swap
 ```go
 package main
@@ -247,6 +312,10 @@ func main() {
     }
 }
 ```
+```
+Timer 1 expired
+Timer 2 stopped
+```
 
 # ticker
 ```go
@@ -275,6 +344,11 @@ func main() {
     ticker.Stop()
     fmt.Println("Ticker stopped")
 }
+```
+```
+Tick at 2009-11-10 23:00:00.5 +0000 UTC m=+0.500000001
+Tick at 2009-11-10 23:00:01 +0000 UTC m=+1.000000001
+Ticker stopped
 ```
 
 # workers
@@ -736,6 +810,10 @@ func main() {
     }
 }
 ```
+```
+received one
+received two
+```
 
 # limited parallel
 ```go
@@ -801,4 +879,37 @@ func main() {
 func printSlice(s []int) {
 	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
 }
+```
+
+# chan deadlock
+```go
+package main
+
+import (
+  "fmt"
+)
+
+func main() {
+  ans := make(chan int)
+  go iter(ans)
+  for {
+    select {
+      case <-ans:
+        fmt.Print(<-ans)
+    }
+  }
+}
+
+func iter(ans chan int) {
+  for i := 0; i < 10; i++ {
+    ans <- i
+  }
+}
+```
+```
+13579fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan receive]:
+main.main()
+	/tmp/sandbox732557531/prog.go:12 +0x73
 ```
