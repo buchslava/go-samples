@@ -913,3 +913,196 @@ goroutine 1 [chan receive]:
 main.main()
 	/tmp/sandbox732557531/prog.go:12 +0x73
 ```
+
+# slice...
+```go
+package main
+
+import "fmt"
+
+func f1(s []int) {
+    s = s[2:4] 
+    for i := range s {
+        s[i] += 10
+    }
+    fmt.Println("f1", s, len(s), cap(s))
+}
+
+func main() {
+    s := []int{1, 2, 3, 4, 5}
+    f1(s)
+    fmt.Println("main", s, len(s), cap(s))
+}
+```
+```
+f1 [13 14] 2 3
+main [1 2 13 14 5] 5 5
+```
+
+# array & slice
+```go
+package main
+
+import "fmt"
+
+func main() {
+    s := []int{1, 2, 3, 4, 5}
+    ss := s[2:4]
+    ss[0] = 100;
+    ss[1] = 101; 
+    fmt.Println(s)
+}
+```
+```
+[1 2 100 101 5]
+```
+
+# string & bytes
+```go
+package main
+
+import "fmt"
+
+func main() {
+    str := "darkercorners"
+    bytes := []byte(str)
+    bytes[0] = 'D'
+    str2 := string(bytes)
+    bytes[6] = 'C'
+    fmt.Println(str, str2, string(bytes))
+}
+```
+```
+darkercorners Darkercorners DarkerCorners
+```
+
+# bytes & string & pointer
+```go
+package main
+
+import (
+    "fmt"
+    "unsafe"
+)
+
+func main() {
+    buf := []byte("darkercorners")
+    buf[0] = 'D'
+
+    // make a string that points to the same data as buf byte slice
+    str := *(*string)(unsafe.Pointer(&buf))
+
+    // modifying byte slice
+    // it now points to the same memory as the string does
+    // str is modified here as well
+    buf[6] = 'C'
+
+    fmt.Println(str, string(buf))
+}
+```
+```
+DarkerCorners DarkerCorners
+```
+
+# slice & pointer
+```go
+package main
+
+import "fmt"
+
+func main() {
+    slice := []string{"one"}
+
+    saddr := &slice[0]
+    *saddr = "two"
+
+    fmt.Println(slice)
+}
+```
+```
+[two]
+```
+
+# values & addresses
+```go
+package main
+
+import "fmt"
+
+func main() {
+    var out []*int
+    for i := 0; i < 3; i++ {
+        out = append(out, &i)
+    }
+    fmt.Println("Values:", *out[0], *out[1], *out[2])
+    fmt.Println("Addresses:", out[0], out[1], out[2])
+}
+```
+```
+Values: 3 3 3
+Addresses: 0xc0000120e0 0xc0000120e0 0xc0000120e0
+```
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    var out []*int
+    for i := 0; i < 3; i++ {
+        i := i // copy i into a new variable
+        out = append(out, &i)
+    }
+    fmt.Println("Values:", *out[0], *out[1], *out[2])
+    fmt.Println("Addresses:", out[0], out[1], out[2])
+}
+```
+```
+Values: 0 1 2
+Addresses: 0xc0000120e0 0xc0000120e8 0xc0000120f0
+```
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    for i := 0; i < 3; i++ {
+        go func() {
+            fmt.Print(i)
+        }()
+    }
+    time.Sleep(time.Second)
+}
+```
+```
+333
+```
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    for i := 0; i < 3; i++ {
+        go func(i int) {
+            fmt.Print(i)
+        }(i)
+    }
+    time.Sleep(time.Second)
+}
+```
+```
+012
+```
+
+
+<!-- https://github.com/miguelmota/golang-for-nodejs-developers
+https://rytisbiel.com/2021/03/06/darker-corners-of-go/ -->
