@@ -1103,6 +1103,30 @@ func main() {
 012
 ```
 
+# Sending sending multiple values through channel
+
+```go
+package main
+
+import "fmt"
+
+func f(c chan func() (int, string)) {
+	c <- (func() (int, string) { return 0, "s" })
+}
+
+func main() {
+	c := make(chan func() (int, string))
+	go f(c)
+	y, z := (<-c)()
+	fmt.Println(y)
+	fmt.Println(z)
+}
+```
+
+```
+0
+s
+```
 
 <!-- https://github.com/miguelmota/golang-for-nodejs-developers
 https://rytisbiel.com/2021/03/06/darker-corners-of-go/ -->
