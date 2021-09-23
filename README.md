@@ -29,7 +29,7 @@ func main() {
     messages <- "buffered"
     messages <- "channel"
     // messages <- "foo"
- 
+
     fmt.Println(<-messages)
     fmt.Println(<-messages)
     messages <- "foo"
@@ -53,7 +53,7 @@ func main() {
     messages <- "buffered"
     messages <- "channel"
     messages <- "foo" // !!!
- 
+
     fmt.Println(<-messages)
     fmt.Println(<-messages)
 }
@@ -190,7 +190,7 @@ func main() {
     fmt.Println(s)  // <nil>
 
     s = &struct{}{} // pointer to an empty structure
-    fmt.Println(s) 
+    fmt.Println(s)
 }
 ```
 
@@ -566,7 +566,7 @@ package main
 
 import "fmt"
 
-type Item struct { 
+type Item struct {
     pNext *Item
     val rune
 }
@@ -574,14 +574,14 @@ type Item struct {
 func createList() *Item {
 
     pHead := &Item{nil, 'a'}
-    
+
     pCurr := pHead
-    for i:= 'b'; i <= 'z'; i++ { 
-        pItem := &Item{nil, i}       
+    for i:= 'b'; i <= 'z'; i++ {
+        pItem := &Item{nil, i}
         pCurr.pNext = pItem
         pCurr = pItem
     }
-    
+
     return pHead
 }
 
@@ -590,7 +590,7 @@ func printList(pList *Item) {
     pCurr := pList
     for {
         fmt.Printf("%c", pCurr.val)
-        
+
         if pCurr.pNext != nil {
             pCurr = pCurr.pNext
         } else {
@@ -601,7 +601,7 @@ func printList(pList *Item) {
 }
 
 func reverseList(pList *Item) *Item {
-    
+
     pCurr := pList
     var pTop *Item = nil
     for {
@@ -611,15 +611,15 @@ func reverseList(pList *Item) *Item {
         pTemp := pCurr.pNext
         pCurr.pNext = pTop
         pTop = pCurr
-        pCurr = pTemp        
+        pCurr = pTemp
     }
-    
+
     return pTop
 }
 
 func main() {
 
-    var pList = createList() 
+    var pList = createList()
     printList(pList)
     printList(reverseList(pList))
 }
@@ -675,7 +675,7 @@ func main() {
 	d.Legs = 4
 	d.Walk()
 	d.Sleep()
-	
+
 	c := new(Cat)
 	c.Name = "Cretin"
 	c.Legs = 3
@@ -921,7 +921,7 @@ package main
 import "fmt"
 
 func f1(s []int) {
-    s = s[2:4] 
+    s = s[2:4]
     for i := range s {
         s[i] += 10
     }
@@ -949,7 +949,7 @@ func main() {
     s := []int{1, 2, 3, 4, 5}
     ss := s[2:4]
     ss[0] = 100;
-    ss[1] = 101; 
+    ss[1] = 101;
     fmt.Println(s)
 }
 ```
@@ -1128,5 +1128,10 @@ func main() {
 s
 ```
 
-<!-- https://github.com/miguelmota/golang-for-nodejs-developers
-https://rytisbiel.com/2021/03/06/darker-corners-of-go/ -->
+# Links
+
+[Go memory](https://habr.com/ru/company/ruvds/blog/442648/)
+
+[Darker Corners of Go](https://rytisbiel.com/2021/03/06/darker-corners-of-go/)
+
+[Golang for Node.js Developers](https://github.com/miguelmota/golang-for-nodejs-developers)
