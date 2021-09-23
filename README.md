@@ -1135,3 +1135,5 @@ s
 [Darker Corners of Go](https://rytisbiel.com/2021/03/06/darker-corners-of-go/)
 
 [Golang for Node.js Developers](https://github.com/miguelmota/golang-for-nodejs-developers)
+
+[Arrays explanation](https://www.digitalocean.com/community/tutorials/understanding-arrays-and-slices-in-go-ru)
