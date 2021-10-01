@@ -1137,3 +1137,17 @@ s
 [Golang for Node.js Developers](https://github.com/miguelmota/golang-for-nodejs-developers)
 
 [Arrays explanation](https://www.digitalocean.com/community/tutorials/understanding-arrays-and-slices-in-go-ru)
+
+[June 2019 Quiz Answers and Explanation](https://golangbot.com/june-2019-quiz-results/)
+
+[Go Quiz](https://habr.com/en/post/550786/)
+
+[avito/blog](https://habr.com/en/company/avito/blog/349088/)
+
+[educative.io](https://www.educative.io/blog/50-golang-interview-questions)
+
+[fullstack.cafe](https://www.fullstack.cafe/blog/go-interview-questions)
+
+[Awesome Interview Questions](https://github.com/DopplerHQ/awesome-interview-questions#golang)
+
+[yourbasic.org/golang/](https://yourbasic.org/golang/)
