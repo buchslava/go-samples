@@ -434,3 +434,152 @@ func main() {
 ```
 1
 ```
+
+---
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+  s := []int{1,2,3};
+  ss := s[1:]
+  ss = append(ss, 4)
+
+  for _, v := range ss {
+    v += 10
+  }
+
+  for i := range ss {
+    ss[i] += 10
+  }
+  fmt.Println(s)
+}
+```
+```
+[1 2 3]
+```
+
+---
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+  for i := 0; i < 5; i++ {
+    defer func (i *int) {
+      fmt.Printf("%v ", *i)
+    }(&i)
+  }
+}
+```
+```
+5 5 5 5 5
+```
+
+---
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+  var wg sync.WaitGroup
+
+  wg.Add(1)
+  go func() {
+    time.Sleep(time.Second * 2)
+    fmt.Println("1")
+    wg.Done()
+  }()
+
+  wg.Wait()
+
+  go func() {
+    fmt.Println("2")
+  }()
+
+  fmt.Println("3")
+}
+```
+```
+1 3 or 1 3 2
+```
+
+---
+
+```go
+package main
+
+import (
+	"fmt"
+	"context"
+	"time"
+)
+
+func main() {
+  timeout := 3 * time.Second
+  ctx, cancel := context.WithTimeout(context.Background(), timeout)
+  defer func() {
+    fmt.Println("cancel")
+    cancel()
+  }()
+
+  select {
+  case <-time.After(1 * time.Second):
+    fmt.Println("waited for 1 sec")
+  case <-time.After(2 * time.Second):
+    fmt.Println("waited for 2 sec")
+  case <-time.After(3 * time.Second):
+    fmt.Println("waited for 3 sec")
+  case <-ctx.Done():
+    fmt.Println(ctx.Err())
+  }
+}
+```
+```
+waited for 1 sec
+cancel
+```
+
+---
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func myfunc() (i int) {
+  defer func() {
+    i++
+  }()
+
+  i = 2
+
+  return 0
+}
+
+func main() {
+  fmt.Println(myfunc())
+}
+```
+```
+1
+```
+
+---
+
